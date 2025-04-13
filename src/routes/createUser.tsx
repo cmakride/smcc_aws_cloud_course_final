@@ -67,7 +67,7 @@ function RouteComponent() {
           />
           <TextInputConnectedToForm<UserForm> name="email" label="Email" />
           <TextInputConnectedToForm<UserForm> name="name" label="Name" />
-          <Button type="submit" variant="contained" disabled={isLoading}>
+          <Button type="submit" variant="outlined" disabled={isLoading}>
             Submit
           </Button>
           <ResponseDisplay response={userResponse} />

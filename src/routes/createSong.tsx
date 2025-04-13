@@ -70,7 +70,7 @@ function RouteComponent() {
           <TextInputConnectedToForm<SongForm> name="genre" label="Genre" />
           <TextInputConnectedToForm<SongForm> name="id" label="ID" />
           <NumberInputConnectedToForm<SongForm> name="stars" label="Stars" />
-          <Button type="submit" variant="contained" disabled={isLoading}>
+          <Button type="submit" variant="outlined" disabled={isLoading}>
             Submit
           </Button>
           <ResponseDisplay response={songResponse} />
