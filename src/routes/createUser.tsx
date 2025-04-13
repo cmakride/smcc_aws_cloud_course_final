@@ -23,6 +23,8 @@ export const Route = createFileRoute("/createUser")({
 
 function RouteComponent() {
   const [userResponse, setUserResponse] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const formMethods = useForm<UserForm>({
     mode: "all",
     resolver: yupResolver(
@@ -40,6 +42,7 @@ function RouteComponent() {
     console.log("Submission had the following errors: ", errors);
   };
   const onSubmit = async () => {
+    setIsLoading(true);
     await put<UserForm>({
       urlSuffix: "users",
       data: values,
@@ -51,7 +54,8 @@ function RouteComponent() {
       })
       .catch((reason: Reason) => {
         console.log("error submitting form ", reason);
-      });
+      })
+      .finally(() => setIsLoading(false));
   };
   return (
     <FormProvider {...formMethods}>
@@ -63,7 +67,9 @@ function RouteComponent() {
           />
           <TextInputConnectedToForm<UserForm> name="email" label="Email" />
           <TextInputConnectedToForm<UserForm> name="name" label="Name" />
-          <Button type="submit">Submit</Button>
+          <Button type="submit" variant="contained" disabled={isLoading}>
+            Submit
+          </Button>
           <ResponseDisplay response={userResponse} />
         </Stack>
       </form>

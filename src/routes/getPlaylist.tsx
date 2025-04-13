@@ -24,6 +24,7 @@ export const Route = createFileRoute("/getPlaylist")({
 
 function RouteComponent() {
   const [playlistResponse, setPlaylistResponse] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const formMethods = useForm<PlaylistForm>({
     mode: "all",
     resolver: yupResolver(
@@ -41,6 +42,7 @@ function RouteComponent() {
     console.log("Submission had the following errors: ", errors);
   };
   const onSubmit = async () => {
+    setIsLoading(true);
     await getPlaylist(values)
       .then((data: any) => {
         console.log("SUBMITTED: ", values);
@@ -49,7 +51,8 @@ function RouteComponent() {
       })
       .catch((reason: Reason) => {
         console.log("error submitting form ", reason);
-      });
+      })
+      .finally(() => setIsLoading(false));
   };
   return (
     <FormProvider {...formMethods}>
@@ -61,7 +64,9 @@ function RouteComponent() {
             name="stars"
             label="Stars"
           />
-          <Button type="submit">Submit</Button>
+          <Button type="submit" variant="contained" disabled={isLoading}>
+            Submit
+          </Button>
           <ResponseDisplay response={playlistResponse} />
         </Stack>
       </form>

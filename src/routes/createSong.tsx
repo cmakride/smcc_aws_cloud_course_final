@@ -25,6 +25,7 @@ export const Route = createFileRoute("/createSong")({
 
 function RouteComponent() {
   const [songResponse, setSongResponse] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const formMethods = useForm<SongForm>({
     mode: "all",
@@ -44,6 +45,7 @@ function RouteComponent() {
     console.log("Submission had the following errors: ", errors);
   };
   const onSubmit = async () => {
+    setIsLoading(true);
     await put<SongForm>({
       urlSuffix: "songs",
       data: { ...values, stars: Number(values.stars) },
@@ -55,7 +57,7 @@ function RouteComponent() {
       })
       .catch((reason: Reason) => {
         console.log("error submitting form ", reason);
-      });
+      }).finally(() => setIsLoading(false));
   };
   return (
     <FormProvider {...formMethods}>
@@ -68,7 +70,9 @@ function RouteComponent() {
           <TextInputConnectedToForm<SongForm> name="genre" label="Genre" />
           <TextInputConnectedToForm<SongForm> name="id" label="ID" />
           <NumberInputConnectedToForm<SongForm> name="stars" label="Stars" />
-          <Button type="submit">Submit</Button>
+          <Button type="submit" variant="contained" disabled={isLoading}>
+            Submit
+          </Button>
           <ResponseDisplay response={songResponse} />
         </Stack>
       </form>
